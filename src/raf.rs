@@ -9,6 +9,8 @@ use std::os::unix::fs::FileExt;
 #[cfg(windows)]
 use std::os::windows::fs::FileExt;
 
+use std::ops::Deref;
+
 use super::{ReadAt, WriteAt};
 
 /// A wrapper for `File` that provides optimized random access through
@@ -48,6 +50,14 @@ pub struct RandomAccessFile {
     file: File,
     #[cfg(not(unix))]
     pos: u64,
+}
+
+impl Deref for RandomAccessFile {
+    type Target = File;
+    
+    fn deref(&self) -> &File {
+        &self.file
+    }
 }
 
 impl RandomAccessFile {
